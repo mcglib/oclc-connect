@@ -170,7 +170,7 @@ class OCLCWebServices {
 		$headers = array();
 		switch ($this->config("wskeys.{$this->wskey}.services.{$service_P}.auth-type")){
 			case 'WSKey Lite':
-				$headers[] = 'wskey:' . $this->config("wskeys.{$this->wskey}.api-key");
+				$headers[] = 'wskey: ' . $this->config("wskeys.{$this->wskey}.api-key");
 				break;
 			case 'HMAC Signature':
 				$hmac = $this->getHMACSignature(
@@ -183,10 +183,27 @@ class OCLCWebServices {
 				);
 				$headers[] = "Authorization: http://www.worldcat.org/wskey/v2/hmac/v1 clientId=\"{$hmac->clientId}\", timestamp=\"{$hmac->timestamp}\", nonce=\"{$hmac->nonce}\", signature=\"{$hmac->signature}\"" . ($this->accessToken ? ", principalID=\"{$this->accessToken->principalID}\", principalIDNS=\"{$this->accessToken->principalIDNS}\"" : '');
 				break;
+			case 'Old HMAC Signature':
+				$hmac = $this->getHMACSignature(
+					$this->config("wskeys.{$this->wskey}.services.{$service_P}.requests.{$request_P}.method"),
+					$requestURL,
+					$args_P,
+					'',
+					$this->config("wskeys.{$this->wskey}.api-key"),
+					$this->config("wskeys.{$this->wskey}.secret")
+				);
+				$headers[] = "Authorization: http://www.worldcat.org/wskey/v2/hmac/v1 clientId=\"{$hmac->clientId}\", timestamp=\"{$hmac->timestamp}\", nonce=\"{$hmac->nonce}\", signature=\"{$hmac->signature}\"";
+				break;
 			case 'Access Tokens':
 				$headers[] = 'Authorization: ' . $this->accessToken->token_type . ' ' . $this->accessToken->access_token;
 				break;
 		}
+		# -ET added support for optional HTTP Accept headers 2014-07-04
+		if(array_key_exists('http-accept',$this->config("wskeys.{$this->wskey}.services.{$service_P}.requests.{$request_P}"))) {
+			$headers[] = 'Accept: ' . $this->config("wskeys.{$this->wskey}.services.{$service_P}.requests.{$request_P}.http-accept");
+		}
+		# -ET added a User-Agent header 2014-07-04
+		$headers[] = "User-Agent: McGill University Digital Initiatives OCLC Web Authentication Services Client 0.1";
 
 		if ($isRedirect_P){
 			header('location: ' . $requestURL . '?' . http_build_query($queryArgs));
@@ -376,4 +393,5 @@ class OCLCWebServices {
 	public function setAccessToken(\stdClass $accessToken_P){
 		$this->accessToken = $accessToken_P;
 	}
+
 }
