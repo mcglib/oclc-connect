@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * This is a sample config file. Copy this file to config.php. Adjust config.php to taste.
+ */
+
+return array(
+	/**
+	 * The OCLC institution ID.
+	 */
+	'institution-id' => '<institution-id>',
+
+	/**
+	 * The list of defined WSKeys.
+	 */
+	'wskeys' => array(
+		/**
+		 * A sample configuration for a WSKey which stores all of its details.
+		 * All of this information can be derived from https://worldcat.org/config.
+		 * Use one of these array keys to instantiate OCLCWebServices. For example:
+		 * $oclc = new OCLCWebServices($config, 'my-wskey');
+		 */
+		'my-wskey' => array(
+			'api-key' => '<wskey>',
+			'expires' => '<expiry-date>',
+			'registry-id' => '<registry-id>',
+			'environment' => '<environment>',
+			'services' => array(
+				/**
+				 * 'authorize-code' and 'access-token', are mandatory in order to authenticate/authorize with OCLC.
+				 */
+				'authorize-code' => include('config/authorize-code.php'),
+				'access-token' => include('config/access-token.php'),
+				/**
+				 * Uncomment the services that this WSKey supports.
+				 */
+				#'article-exchange-api' => include('config/article-exchange-api.php'),
+				#'availability-query' => include('config/availability-query.php'),
+				#'interlibrary-loan-policies-directory' => include('config/interlibrary-loan-policies-directory.php'),
+				#'openurl-gateway' => include('config/openurl-gateway.php'),
+				#'questionpoint-knowledge-base-api' => include('config/questionpoint-knowledge-base-api.php'),
+				#'viaf' => include('config/viaf.php'),
+				#'wms-acquisitions-api' => include('config/wms-acquisitions-api.php'),
+				#'wms-circulation-api ' => include('config/wms-circulation-api.php'),
+				#'wms-collection-management-api' => include('config/wms-collection-management-api.php'),
+				#'wms-license-manager-api' => include('config/wms-license-manager-api.php'),
+				#'wms-ncip-service' => include('config/wms-ncip-service.php'),
+				#'wms-vendor-information-center-api' => include('config/wms-vendor-information-center-api.php'),
+				#'worldcat-basic-api' => include('config/worldcat-basic-api.php'),
+				#'worldcat-identities' => include('config/worldcat-identities.php'),
+				#'worldcat-knowledge-base-api' => include('config/worldcat-knowledge-base-api.php'),
+				#'worldcat-metadata-api' => include('config/worldcat-metadata-api.php'),
+				#'worldcat-registry' => include('config/worldcat-registry.php'),
+				#'worldcat-search-api' => include('config/worldcat-search-api.php'),
+				#'xisbn' => include('config/xisbn.php'),
+				#'xissn' => include('config/xissn.php'),
+				#'xoclcnum' => include('config/xoclcnum.php'),
+			),
+			'redirect-url' => '<redirect-url>',
+			'secret' => '<secret>',
+		),
+		'another-wskey' => array(
+			//...
+		),
+	),
+);
